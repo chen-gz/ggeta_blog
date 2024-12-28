@@ -1,6 +1,4 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
     <div id="content-wrapper-inner">
@@ -10,6 +8,7 @@
 
 <style scoped lang="sass">
 #content-wrapper-inner
+
     padding-left: 1rem
     padding-right: 1rem
     //padding-top: 1rem
@@ -29,5 +28,4 @@
         //width: 100%
 #content-wrapper-inner::-webkit-scrollbar
     display: none
-
 </style>

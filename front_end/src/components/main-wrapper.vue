@@ -22,7 +22,7 @@ import RightPanel from "@/components/main-wrapper/right-panel.vue";
 </template>
 
 <style scoped lang="sass">
-@import "src/assets/main-wrapper.sass"
+@import "@/assets/main-wrapper.sass"
 
 #main-wrapper-inner
     width: 100%

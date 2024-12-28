@@ -1,0 +1,22 @@
+.sub-meta
+    margin-top: 8px
+    margin-bottom: 20px
+    display: block
+    color: rgb(117, 117, 117)
+    font-size: 0.8rem
+
+    button
+        width: 4rem
+        background-color: white
+        border: 1px solid #d1d5da
+        //round
+        border-radius: 6px
+
+    & > span, button
+        margin-right: 10px
+
+        &:first-child
+            margin-right: 3px
+
+        &:last-child
+            margin-right: 0

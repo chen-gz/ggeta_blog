@@ -1,22 +1,23 @@
-<script setup>
-
-</script>
+<script setup></script>
 
 <template>
     <header class="profile-wrapper">
         <a href="/" id="avatar" class="rounded-circle">
-            <img src="https://minio.ggeta.com/blog-public-data/mine_square.jpg"
-                 width="112" height="112" alt="avatar"
-                 onerror="this.style.display='none'"></a>
+            <img
+                src="https://minio.ggeta.com/blog-public-data/mine_square.jpg"
+                width="112"
+                height="112"
+                alt="avatar"
+                onerror="this.style.display='none'"
+        /></a>
         <h1 class="title"><a href="/">Guangzong</a></h1>
         <p class="subtitle fst-italic mb-0">Knowledge and Live</p>
     </header>
-
 </template>
 
 <style scoped lang="sass">
 //@import "src/assets/variables"
-@import "src/assets/sidebar"
+@use "@/assets/sidebar" as *
 
 .profile-wrapper
     margin: 3rem 1.5rem 2.5rem 2.5rem
@@ -58,6 +59,4 @@
     font-style: $sidebar-subtitle-font-style
     margin-bottom: 0
     margin-top: 0
-
-
 </style>

@@ -1,0 +1,50 @@
+.title
+    margin-bottom: 10px
+    font-weight: 500
+    font-size: 1.2rem
+    color: #2A2A2A
+
+.home-card
+    height: 150px
+    border: 1px solid #f6f6f6
+    border-radius: 8px
+    padding: 10px 10px 3px 16px
+    width: 100%
+    margin-bottom: 20px
+    margin-top: 3px
+    box-shadow: 1px 1px 5px lightgrey
+
+    &:hover
+        background-color: #f6f6f6
+
+    .home-summary
+        color: #666
+        flex-grow: 1
+        // use ... to hide the overflow
+        text-overflow: ellipsis
+        //white-space: nowrap
+        overflow: hidden
+        text-overflow: ellipsi
+        display: -webkit-box
+        -webkit-box-orient: vertical
+        -webkit-line-clamp: 3
+
+//    put at the bottom of the card
+.home-card-bottom
+    position: relative
+    display: flex
+    //justify-content: space-between
+    height: 25px
+    font-size: 0.8em
+    color: #666
+    align-items: center
+    bottom: 1px
+
+    opacity: 0.77
+
+    span
+        margin-right: 25px
+        &:last-child
+            margin-right: 0
+        i
+            margin-right: 5px

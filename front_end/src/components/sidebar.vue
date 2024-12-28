@@ -1,5 +1,4 @@
 <script setup>
-
 import Sidebar_header from "@/components/sidebar/sidebar_header.vue";
 import Sidebar_nav from "@/components/sidebar/sidebar_nav.vue";
 import Sidebar_bottom from "@/components/sidebar/sidebar_bottom.vue";
@@ -7,15 +6,15 @@ import Sidebar_bottom from "@/components/sidebar/sidebar_bottom.vue";
 
 <template>
     <div id="sidebar-wrapper-inner" class="d-flex flex-column">
-        <sidebar_header/>
-        <sidebar_nav/>
-        <sidebar_bottom/>
+        <sidebar_header />
+        <sidebar_nav />
+        <sidebar_bottom />
     </div>
 </template>
 
 <style scoped lang="sass">
 // import the variables from the variables.saas file
-@import "@/assets/variables.sass"
+@import "@/assets/variables"
 @import "@/assets/typography-light.scss"
 %sidebar-link-hover
     &:hover
@@ -26,7 +25,6 @@ a
     //position: fixed
     @include light-scheme
     //width: calc($sidebar-width - 1px) // remove border size
-    width: calc(100%)
     border-right: 1px solid var(--sidebar-border-color)
     height: 100%
     background-color: var(--sidebar-bg)
@@ -35,6 +33,4 @@ a
 
 //#content-wrapper-inner::-webkit-scrollbar
 //    display: none
-
-
 </style>

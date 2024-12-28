@@ -6,21 +6,32 @@
 
 <template>
     <nav class="flex-column flex-grow-1">
-        <div class="nav-item active"><a class="nav-link" href="/"> <i class="fa-fw fas fa-home"/> <span>HOME</span> </a>
+        <div class="nav-item active">
+            <a class="nav-link" href="/">
+                <i class="fa-fw fas fa-home" /> <span>HOME</span>
+            </a>
         </div>
         <!--        <div class="nav-item"> <a class="nav-link" href="/cate/"> <i class="fa-fw fas fa-stream"/> <span>CATEGORIES</span> </a> </div>-->
-        <div class="nav-item"><a class="nav-link" href="/tag/"> <i class="fa-fw fas fa-tags"></i> <span>TAGS</span> </a>
+        <div class="nav-item">
+            <a class="nav-link" href="/tag/">
+                <i class="fa-fw fas fa-tags"></i> <span>TAGS</span>
+            </a>
         </div>
-        <div class="nav-item"><a class="nav-link" href="/post/"> <i class="fa-fw fas fa-archive"></i>
-            <span>ARCHIVES</span> </a></div>
-        <div class="nav-item"><a class="nav-link" href="/about/"> <i class="fa-fw fas fa-info-circle"></i>
-            <span>ABOUT</span> </a></div>
+        <div class="nav-item">
+            <a class="nav-link" href="/post/">
+                <i class="fa-fw fas fa-archive"></i> <span>ARCHIVES</span>
+            </a>
+        </div>
+        <div class="nav-item">
+            <a class="nav-link" href="/about/">
+                <i class="fa-fw fas fa-info-circle"></i> <span>ABOUT</span>
+            </a>
+        </div>
     </nav>
-
 </template>
 
 <style lang="sass" scoped>
-@import "@/assets/variables.sass"
+@import "@/assets/variables"
 // define font size and line height
 $font-size: 0.9rem
 $line-height: 0.8
@@ -76,6 +87,4 @@ nav::-webkit-scrollbar
         //margin-right: 2rem
         width: $line-height
         height: $line-height
-
-
 </style>
