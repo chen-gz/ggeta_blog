@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { getDistinct, SearchPostsRequestV4, GetDistinctResponse } from "/apiv4";
-import MainWrapper from "@/App.vue";
 // import Lists from "@/views/Lists.vue";
 // let props = defineProps<{
 //     tag_name: String;

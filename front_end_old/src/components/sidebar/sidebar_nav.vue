@@ -31,7 +31,7 @@
 </template>
 
 <style lang="sass" scoped>
-@import "@/assets/variables"
+@use "@/assets/variables" as *
 // define font size and line height
 $font-size: 0.9rem
 $line-height: 0.8

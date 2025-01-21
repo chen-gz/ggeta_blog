@@ -1,5 +1,4 @@
 <script setup>
-
 import Topbar from "@/components/main-wrapper/topbar.vue";
 import MainContent from "@/components/main-wrapper/content.vue";
 import RightPanel from "@/components/main-wrapper/right-panel.vue";
@@ -8,21 +7,21 @@ import RightPanel from "@/components/main-wrapper/right-panel.vue";
 <template>
     <div id="main-wrapper-inner">
         <div id="main-wrapper-topbar-wrapper-outer">
-            <topbar/>
+            <topbar />
         </div>
         <div id="main-wrapper-main" class="d-flex flex-row">
             <div id="main-content-wrapper-outer">
-                <main-content/>
+                <main-content />
             </div>
             <div id="main-wrapper-right-panel-outer">
-                <right-panel/>
+                <right-panel />
             </div>
         </div>
     </div>
 </template>
 
 <style scoped lang="sass">
-@import "@/assets/main-wrapper.sass"
+@use "@/assets/main-wrapper.sass" as *
 
 #main-wrapper-inner
     width: 100%

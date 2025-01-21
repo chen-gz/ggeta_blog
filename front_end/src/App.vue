@@ -1,62 +1,78 @@
-<script setup>
-import Sidebar from "@/components/sidebar.vue";
-import PostPage from "@/components/main-wrapper/content/post.vue";
-import { watch } from "vue";
-// nextTick call tocbot
-import { nextTick } from "vue";
-import Category from "@/components/main-wrapper/content/category.vue";
-import MainWrapper from "@/components/main-wrapper.vue";
-import Sidebar_bottom from "@/components/sidebar/sidebar_bottom.vue";
-
-// add copy button to code block
-watch(() => {
-    nextTick(() => {
-        document.querySelectorAll("pre").forEach((block) => {
-            if (!block.querySelector(".copy-button")) {
-                const copyButton = document.createElement("button");
-                copyButton.className = "copy-button";
-                copyButton.textContent = "Copy";
-                copyButton.addEventListener("click", () => {
-                    navigator.clipboard
-                        .writeText(block.textContent)
-                        .then(() => {
-                            copyButton.textContent = "Copied!";
-                            setTimeout(() => {
-                                copyButton.textContent = "Copy";
-                            }, 2000);
-                        });
-                });
-                block.style.position = "relative";
-                block.appendChild(copyButton);
-            }
-        });
-    });
+<script setup lang="ts">
+// import home from './compon
+// ents/About.vue';
+import FooterComponent from './components/FooterComponent.vue';
+import { newPostV4} from "/apiv4";
+import { useRouter } from "vue-router";
+const router = useRouter()
+// f3 to create a new post
+function new_post() {
+  console.log("new post")
+  // create a new post and redirect to the new post
+  newPostV4().then((response) => {
+    console.log(response)
+    router.push(`/post_edit/${response.url}`)
+  })
+}
+document.addEventListener("keydown", function (e) {
+  // f3 to create a new post
+  if (e.key === "F3") {
+    e.preventDefault();
+    console.log("F3 create new post")
+    new_post()
+  }
 });
+function performSearch() {
+  console.log("search")
+  let search = document.getElementById("search") as HTMLInputElement
+  console.log("search: " + search.value)
+  if (search.value.length > 0) {
+    router.push(`/search/${search.value}`)
+  }
+}
 </script>
 
 <template>
-    <aside id="app-sidebar">
-        <sidebar></sidebar>
-    </aside>
-    <main>
-        <main-wrapper></main-wrapper>
-    </main>
+  <s-appbar style="background-color: white;">
+    <!--左侧菜单按钮-->
+    <!-- <s-icon-button slot="navigation">
+      <s-icon name="menu"></s-icon>
+    </s-icon-button> -->
+    <!--标题-->
+    <div slot="headline" @click="$router.push('/')"> Ggeta </div>
+    <s-icon name="dark_mode" slot="headline"></s-icon>
+    <!-- <s-icon name="home"></s-icon> -->
+    <!--右侧操作按钮-->
+    <!-- <s-search></s-search> -->
+    <s-search placeholder="search" @keyup.enter="performSearch" @click="performSearch" id="search">
+      <s-icon name="search" slot="start"></s-icon>
+      <s-icon-button slot="end">
+        <s-icon name="close"></s-icon>
+      </s-icon-button>
+    </s-search>
+    <s-button type="text" @click="$router.push('/tag/');"> Tags </s-button>
+    <s-button type="text" @click="$router.push('/post/');"> Archives </s-button>
+    <s-button type="text" @click="$router.push('/about');"> About </s-button>
+    <!-- <s-button type="text"> Series </s-button> -->
+  </s-appbar>
+  <div class="p-4">
+    <!-- <home/> -->
+    <router-view/>
+    <FooterComponent/>
+  </div>
 </template>
 
-<style lang="sass">
-@use "assets/variables"
-@use "assets/sidebar" as *
-main
-    z-index: 2
-    overflow-y: auto
-    overflow-x: hidden
-    word-wrap: anywhere
-    height: 100%
-    flex-grow: 1
-
-#app-sidebar
-    height: 100%
-    overflow: hidden
-    flex-shrink: 0
-    fle-grow: 0
+<style scoped>
+/* .logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.vue:hover {
+  filter: drop-shadow(0 0 2em #42b883aa);
+} */
 </style>

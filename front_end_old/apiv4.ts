@@ -71,31 +71,30 @@ export async function updatePostV4(request: V4PostData): Promise<UpdatePostRespo
     }).then(response => response.json())
 }
 
-export async function deletePost(post: V4PostData) {
-    post.is_deleted = true
-    return updatePostV4(post);//.then(response => {
-        // if (response.status == "success") {
-            // showSuccess("Delete success")
-            // router.push({path: '/posts'})
-        // } else {
-            // showError("Delete failed")
-        // }
-    // })
-}
+// export async function deletePost(post: V4PostData) {
+//     post.is_deleted = true
+//     updatePostV4(post).then(response => {
+//         if (response.status == "success") {
+//             showSuccess("Delete success")
+//             router.push({path: '/posts'})
+//         } else {
+//             showError("Delete failed")
+//         }
+//     })
+// }
 //
 export async function savePost(post: V4PostData) {
-    return updatePostV4(post)
-    // .then(
-    //     (response) => {
-    //         if (response.status == "success") {
-    //             // showSuccess("Post saved")
-    //             alert("Post saved")
-    //             // router.push({path: '/posts/edit/' + response.post.url})
-    //         } else {
-    //             // showError("Failed to save post")
-    //             alert("failed to save post, login is required");
-    //         }
-    //     })
+    updatePostV4(post).then(
+        (response) => {
+            if (response.status == "success") {
+                // showSuccess("Post saved")
+                alert("Post saved")
+                // router.push({path: '/posts/edit/' + response.post.url})
+            } else {
+                // showError("Failed to save post")
+                alert("failed to save post");
+            }
+        })
 }
 
 export interface NewPostResponseV4 {

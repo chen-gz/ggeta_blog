@@ -1,11 +1,5 @@
-## rule for `id`
+# Vue 3 + TypeScript + Vite
 
-The `id` is an basic attribute for html elements. It is used to identify the element in the document. It is used to link to the element from other parts of the document. 
-It is used to style the element with CSS.
-We may face a problem that two elements have the same `id` in the same document. It is not allowed. But the `id` should be unique in the document.
-Here, we following the following rule for `id` namign: 
+This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
-
-- The `id` should be unique in the document.
-- the `id` start from the "filename-" and then the name of the element.
-- All filename in the project should be in lower case and unique
+Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).

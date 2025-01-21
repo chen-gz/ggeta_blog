@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sober.js Test</title>
+        <!-- Include Sober.js from CDN -->
+        <script src="https://unpkg.com/sober@1.0.4/dist/sober.min.js"></script>
+        <style>
+            body {
+                max-width: 1440px;
+                margin: 0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <s-appbar style="background-color: white;">
+            <!--左侧菜单按钮-->
+            <s-icon-button slot="navigation">
+                <s-icon name="menu"></s-icon>
+            </s-icon-button>
+            <!--标题-->
+            <div slot="headline"> Title </div>
+            <!--右侧操作按钮-->
+            <!-- <s-search></s-search> -->
+            <s-search placeholder="search">
+                <s-icon name="search" slot="start"></s-icon>
+                <s-icon-button slot="end">
+                  <s-icon name="close"></s-icon>
+                </s-icon-button>
+              </s-search>
+            <s-button type="text"> Tags </s-button>
+            <s-button type="text"> Archives </s-button>
+            <s-button type="text"> About </s-button>
+            <s-button type="text"> Series </s-button>
+        </s-appbar>
+
+        <div id="main">
+            <s-croll-vew>
+
+            </s-croll-vew>
+        </div>
+
+        <!-- Add your custom JavaScript here -->
+        <script>
+            // You can start testing Sober.js functionality here
+            window.onload = function () {
+                // Your JavaScript code here
+            };
+        </script>
+    </body>
+</html>

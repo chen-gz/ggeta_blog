@@ -1,9 +1,74 @@
-@import "variables"
-@import typography-light
-#markdown_content
-    //font-family: "Vollkorn", Palatino, Times, sans-serif
-    font-family: $font-family-base
-    > *
+@use "variables" as *;
+@use "typography-light";
+#markdown_content * {
+    /* font-family: "Source Sans Pro", "Microsoft Yahei", sans-serif; */
+    -webkit-font-smoothing: antialiased;
+    /* color: rgba(52, 52, 60, 1); */
+}
+#markdown_content p {
+    font-family: "Source Sans Pro", "Microsoft Yahei", sans-serif;
+    margin-bottom: 0.5rem;
+    font-weight: 400;
+    /* font-size: 16.28px; */
+    /* line-height: 30.24px; */
+    font-size: 1.1rem; // 16.28px
+    line-height: 1.8rem;
+    color: rgba(52, 52, 60, 1);
+}
+#markdown_content blockquote {
+    // indent and left border and background color
+    /* margin-left: 1.5rem; */
+    padding-left: 1.5rem;
+    border-left: 4px solid #d1d5da;
+    background-color: #f6f8fa;
+}
+#markdown_content h1 h2 h3 h4 {
+    font-family: $font-family-heading;
+    text-align: center;
+    // color more darker than p and blockquote
+    color: #2a2a2a;
+}
+#markdown_content {
+    pre {
+        position: relative;
+        background: #f0f0f0;
+        code {
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9em;
+            background: #f0f0f0;
+            z-index: 10;
+        }
+        .copy-button {
+            position: absolute;
+            right: 2px;
+            top: -5px;
+            z-index: 20;
+            background: none;
+            // background: white
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            &:hover {
+                background: #f0f0f0;
+            }
+        }
+    }
+    /* pre .copy-button {
+        position: absolute;
+        right: 2px;
+        top: -5px;
+        z-index: 20;
+        background: none;
+        // background: white
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        &:hover
+          background: #f0f0f0;
+    } */
+}
+
+/* > *
         margin-bottom: 1rem
         font-weight: 400
         font-size: 16.28px
@@ -103,4 +168,4 @@
         padding: 0.5rem
         cursor: pointer
         &:hover
-          background: #f0f0f0
+          background: #f0f0f0 */

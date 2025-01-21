@@ -14,8 +14,8 @@ import Sidebar_bottom from "@/components/sidebar/sidebar_bottom.vue";
 
 <style scoped lang="sass">
 // import the variables from the variables.saas file
-@import "@/assets/variables"
-@import "@/assets/typography-light.scss"
+@use "@/assets/variables" as *
+@use "@/assets/typography-light.scss" as *
 %sidebar-link-hover
     &:hover
         color: var(--sidebar-active-color)

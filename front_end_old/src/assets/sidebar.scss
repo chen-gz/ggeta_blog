@@ -30,8 +30,8 @@ $sidebar-subtitle-font-style: italic;
     }
 }
 aside {
-    @include sidebar-width();
     flex-grow: 0;
     flex-shrink: 0;
     flex-basis: auto;
+    @include sidebar-width();
 }

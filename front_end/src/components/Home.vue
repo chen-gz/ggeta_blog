@@ -30,7 +30,6 @@
 
 import { ref } from "vue";
 // import { SearchPostsRequestV4, searchPostsV4, V4PostData } from "apiv4.js";
-import { formatDate } from "/ui_utils";
 import  { SearchPostsRequestV4, searchPostsV4, V4PostData } from "/apiv4.js";
 
 let article = ref([] as V4PostData[]);

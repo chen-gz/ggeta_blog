@@ -1,11 +1,11 @@
 <template>
     <div id="post-inner-wrapper">
-        <div class="post_page">
+        <div class="post_page mt-2">
             <h1>{{ post.title }}</h1>
             <div class="post-meta text-muted">
-                <div class="post-header">
+                <div class="post-header mt-2" style="font-size: 0.8rem">
                     <span> Posted on </span>
-                    <span style="font-weight: 600; margin-right: 7px">
+                    <span style="font-weight: 400" class="me-2">
                         {{
                             new Date(post.created_at).toLocaleDateString(
                                 "en-US",
@@ -18,7 +18,7 @@
                         }}
                     </span>
                     <span> Updated on </span>
-                    <span class="before_dot" style="font-weight: 600">
+                    <span class="before_dot" style="font-weight: 400">
                         {{
                             new Date(post.updated_at).toLocaleDateString(
                                 "en-US",
@@ -32,7 +32,7 @@
                     >
                     <div class="sub-meta">
                         <span>By</span>
-                        <span class="author" style="font-weight: 600">{{
+                        <span class="author" style="font-weight: 400">{{
                             post.author
                         }}</span>
                         <!--          add edit button-->
@@ -48,45 +48,50 @@
     </div>
 </template>
 
-<style lang="sass" scoped>
-.post_page
-    margin-top: 1.5rem
-    h1
-        margin-bottom: 1rem
-        font-weight: 400
-        color: rgb(42, 42, 42)
-        -webkit-font-smoothing: antialiased
+<style lang="scss" scoped>
+/* .post_page {
+    margin-top: 1.5rem;
+    h1 {
+        margin-bottom: 1rem;
+        font-weight: 400;
+        color: rgb(42, 42, 42);
+        -webkit-font-smoothing: antialiased;
+    }
+} */
 
-.post-header
-    margin-top: 2rem
-    margin-bottom: 20px
-    display: block
-    color: rgb(117, 117, 117)
-    font-size: 0.8rem
-    font-weight: 500
+/* .post-header {
+    margin-top: 2rem;
+    margin-bottom: 20px;
+    display: block;
+    color: rgb(117, 117, 117);
+    font-size: 0.8rem;
+    font-weight: 500;
+} */
 
-.sub-meta
-    margin-top: 8px
-    margin-bottom: 20px
-    display: block
-    color: rgb(117, 117, 117)
-    font-size: 0.8rem
-
-    button
-        width: 4rem
-        background-color: white
-        border: 1px solid #d1d5da
+.sub-meta {
+    margin-top: 8px;
+    margin-bottom: 20px;
+    display: block;
+    color: rgb(117, 117, 117);
+    font-size: 0.8rem;
+    button {
+        width: 4rem;
+        background-color: white;
+        border: 1px solid #d1d5da;
         //round
-        border-radius: 6px
-
-    & > span, button
-        margin-right: 10px
-
-        &:first-child
-            margin-right: 3px
-
-        &:last-child
-            margin-right: 0
+        border-radius: 6px;
+    }
+    & > span,
+    button {
+        margin-right: 10px;
+        &:first-child {
+            margin-right: 3px;
+        }
+        &:last-child {
+            margin-right: 0;
+        }
+    }
+}
 </style>
 
 <script lang="ts" setup>
