@@ -22,6 +22,7 @@
   </style>
   <script>
     MathJax = {
+      loader: { load: ["input/tex", "output/svg"] }, // 
       tex: {
         inlineMath: [
           ["$", "$"],
@@ -30,6 +31,7 @@
         tags: "ams",
         // displayAlign: 'left', // Optional: Aligns equations to the left
         // displayIndent: '2em' // Optional: Indents equations when aligned to the left
+        
       },
       options: {
         enableMenu: false,
@@ -39,7 +41,7 @@
             semantics: false, // put original format in <semantic> tag in MathML
             zoom: "NoZoom", // or 'Click' or 'DoubleClick' as zoom trigger
             zscale: "200%", // zoom scaling factor
-            renderer: "CHTML", // or 'SVG'
+            renderer: "SVG", // or 'SVG'
             alt: false, // true if ALT required for zooming
             cmd: false, // true if CMD required for zooming
             ctrl: false, // true if CTRL required for zooming

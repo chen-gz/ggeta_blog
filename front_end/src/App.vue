@@ -2,7 +2,7 @@
 // import home from './compon
 // ents/About.vue';
 import FooterComponent from './components/FooterComponent.vue';
-import { newPostV4} from "/apiv4";
+import { newPostV4 } from "/apiv4";
 import { useRouter } from "vue-router";
 const router = useRouter()
 // f3 to create a new post
@@ -10,9 +10,15 @@ function new_post() {
   console.log("new post")
   // create a new post and redirect to the new post
   newPostV4().then((response) => {
-    console.log(response)
-    router.push(`/post_edit/${response.url}`)
+    if (response.status == "success") {
+      console.log(response)
+      router.push(`/post_edit/${response.url}`)
+    } else {
+      // alert("failed to save post, login is required");
+      router.push("/login");
+    }
   })
+
 }
 document.addEventListener("keydown", function (e) {
   // f3 to create a new post
@@ -33,6 +39,7 @@ function performSearch() {
 </script>
 
 <template>
+
   <s-appbar style="background-color: white;">
     <!--左侧菜单按钮-->
     <!-- <s-icon-button slot="navigation">
@@ -57,8 +64,8 @@ function performSearch() {
   </s-appbar>
   <div class="p-4">
     <!-- <home/> -->
-    <router-view/>
-    <FooterComponent/>
+    <router-view />
+    <FooterComponent />
   </div>
 </template>
 
