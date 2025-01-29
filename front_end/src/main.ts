@@ -9,6 +9,8 @@ import Tags from './components/Tags.vue'
 import Home from './components/Home.vue'
 import PostEdit from './components/PostEdit.vue'
 import Login from './components/Login.vue'
+import Codeforces from './components/Codeforces.vue'
+import Pub from './components/Pub.vue'
 // import 'sober'
 
 const routes = [
@@ -23,6 +25,9 @@ const routes = [
     {path: '/search/:id', name: 'Search', component: PostList},
     {path: '/about', name: 'About', component: About},
     {path: '/login', name: 'Login', component: Login},
+    {path: '/codeforces', name: 'Cf', component: Codeforces},
+    {path: '/publications', name: 'Pub', component: Pub},
+
     {path: '/:pathMatch(.*)*', name: 'NotFound', component: Home},
 
 ];

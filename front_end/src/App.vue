@@ -57,6 +57,8 @@ function performSearch() {
         <s-icon name="close"></s-icon>
       </s-icon-button>
     </s-search>
+    <s-button type="text" @click="$router.push('/publications/');"> Publications </s-button>
+    <s-button type="text" @click="$router.push('/codeforces/');"> Codeforces </s-button>
     <s-button type="text" @click="$router.push('/tag/');"> Tags </s-button>
     <s-button type="text" @click="$router.push('/post/');"> Archives </s-button>
     <s-button type="text" @click="$router.push('/about');"> About </s-button>
