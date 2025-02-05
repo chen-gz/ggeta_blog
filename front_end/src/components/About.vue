@@ -17,7 +17,10 @@
       <s-card style="display:flex; max-width: none;" class="mb-4">
         <a href="https://arxiv.org/abs/2411.10368" target="_blank" style="margin-right: 20px;">
           <!-- <img src="https://arxiv.org/pdf/2411.10368v1" alt="Paper Image" style="width: 100px; height: 100px;"> -->
-          <img src="https://arxiv.org/pdf/2411.10368v1" alt="Paper Thumbnail" style="width:200px;">
+<!--          <img src="https://arxiv.org/pdf/2411.10368v1" alt="Paper Thumbnail" style="width:200px;">-->
+            <img src="/src/assets/paper_mechanisms.png" alt="Paper Thumbnail" style="width:200px;">
+<!--            <iframe src="https://arxiv.org/pdf/2411.10368v1.pdf" width="200" ></iframe>-->
+
         </a>
         <div>
           <strong>Neural Network Analysis:</strong> Investigated the relationship between GAN and Autoencoder for
@@ -36,7 +39,8 @@
       <s-card style="display:flex; max-width: none;" class="mb-4">
         <a href="https://openaccess.thecvf.com/content/CVPR2024W/MTF/html/Chen_Shape-Preserving_Generation_of_Food_Images_for_Automatic_Dietary_Assessment_CVPRW_2024_paper.html" target="_blank" style="margin-right: 20px;">
           <!-- <img src="https://arxiv.org/pdf/2411.10368v1" alt="Paper Image" style="width: 100px; height: 100px;"> -->
-          <img src="https://openaccess.thecvf.com/content/CVPR2024W/MTF/papers/Chen_Shape-Preserving_Generation_of_Food_Images_for_Automatic_Dietary_Assessment_CVPRW_2024_paper.pdf" alt="Paper Thumbnail" style="width:200px;">
+<!--          <img src="https://openaccess.thecvf.com/content/CVPR2024W/MTF/papers/Chen_Shape-Preserving_Generation_of_Food_Images_for_Automatic_Dietary_Assessment_CVPRW_2024_paper.pdf" alt="Paper Thumbnail" style="width:200px;">-->
+                      <img src="/src/assets/paper_shape.png" alt="Paper Thumbnail" style="width:200px;">
         </a>
         <div>
 
@@ -115,10 +119,12 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'About'
-}
+<!--<script>-->
+<script lang="ts" setup>
+//   import {ref, watch} from "vue";
+// export default {
+//   name: 'About'
+// }
 </script>
 
 <style scoped>

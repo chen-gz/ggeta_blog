@@ -51,10 +51,10 @@
 </template>
 
 
-<script>
-export default {
-    name: 'Pub'
-}
+<script lang="ts" setup>
+// export default {
+//     name: 'Pub'
+// }
 </script>
 
 <style scoped>

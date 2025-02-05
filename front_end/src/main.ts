@@ -11,6 +11,8 @@ import PostEdit from './components/PostEdit.vue'
 import Login from './components/Login.vue'
 import Codeforces from './components/Codeforces.vue'
 import Pub from './components/Pub.vue'
+import ShowsList from './components/ShowsList.vue'
+import Videos from "./components/Videos.vue";
 // import 'sober'
 
 const routes = [
@@ -27,7 +29,8 @@ const routes = [
     {path: '/login', name: 'Login', component: Login},
     {path: '/codeforces', name: 'Cf', component: Codeforces},
     {path: '/publications', name: 'Pub', component: Pub},
-
+    {path: '/Shows/', name: 'Video', component: Videos},
+    {path: '/Shows/:show_name', name: 'Shows', component: ShowsList, props:true},
     {path: '/:pathMatch(.*)*', name: 'NotFound', component: Home},
 
 ];
@@ -38,4 +41,9 @@ const router = createRouter({
     routes
 });
 // createApp(App).mount('#app')
-createApp(App).use(router).mount('#app')
+const app = createApp(App);
+app.config.compilerOptions.isCustomElement = tag => tag.startsWith('s-');
+
+// createApp(App).use(router).mount('#app')
+
+app.use(router).mount('#app')

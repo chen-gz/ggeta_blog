@@ -7,7 +7,7 @@ import {useRouter} from "vue-router";
 
 // const blogBackendUrl = "http://localhost:2009"
 
-const blogBackendUrl = "https://blog.ggeta.com"
+const blogBackendUrl = "https://ggeta.com"
 
 export let is_logined = ref(false)
 
@@ -398,3 +398,46 @@ export async function GetFileList(post_id: number): Promise<string[]> {
 }
 
 
+
+// GET localhost:2009/api/shows/v1/get_list
+
+// type response struct {
+//     Shows []string `json:"shows"`
+// }
+export interface GetShowListRequest {
+    show_name: string
+}
+export interface GetShowListResponse {
+    shows: string[]
+}
+export async function ShowGetList(show: string): Promise<GetShowListResponse> {
+    const request = {show_name: show}
+    return await fetch(`${blogBackendUrl}/api/shows/v1/get_list`, {
+        method: "POST",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
+        },
+        body: JSON.stringify(request),
+    }).then(response => response.json())
+
+}
+export interface GetShowItemsResponse {
+    show_url: string
+}
+export interface GetShowItemsRequest {
+    path: string
+}
+
+export async function ShowGetItems(path: string): Promise<GetShowItemsResponse> {
+    // POST https://ggeta.com/api/shows/v1/get_presigned_url
+
+    const request = { path: path}
+    return await fetch(`${blogBackendUrl}/api/shows/v1/get_presigned_url`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
+        },
+        body: JSON.stringify(request),
+    }).then(response => response.json())
+}

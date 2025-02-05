@@ -2,10 +2,10 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"go_blog/database"
 	"go_blog/handler"
 	"go_blog/interfaces"
+	"log"
 	"os"
 )
 
@@ -14,8 +14,6 @@ type Config struct {
 	UserDatabase  database.UserDbConfig  `json:"user_database"`
 	PhotoDatabase database.PhotoDbConfig `json:"photo_database"`
 	Minio         handler.MinioConfig    `json:"minio"`
-	PhotoMinio    handler.MinioConfig    `json:"photo_minio"`
-	VideoMinio    handler.MinioConfig    `json:"video_minio"`
 	VideoDb       interfaces.DbConfig    `json:"video_db"`
 }
 
@@ -24,11 +22,17 @@ func ReadConfig() Config {
 	var config Config
 	configFile, err := os.Open("config.json")
 	if err != nil {
-		fmt.Println(configFile)
-		fmt.Println(err)
+		log.Println("Error opening config file:", err)
+		return Config{}
 	}
 	defer configFile.Close()
+
 	jsonParser := json.NewDecoder(configFile)
-	jsonParser.Decode(&config)
+	if err := jsonParser.Decode(&config); err != nil {
+		log.Println("Error decoding JSON:", err)
+		return Config{}
+	}
+
+	log.Println(config)
 	return config
 }
