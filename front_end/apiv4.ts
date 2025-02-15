@@ -441,3 +441,16 @@ export async function ShowGetItems(path: string): Promise<GetShowItemsResponse> 
         body: JSON.stringify(request),
     }).then(response => response.json())
 }
+
+export async function GetPresignedUrl(bucket:string, path: string): Promise<GetPresignedUrlResponse> {
+    // POST https://ggeta.com/api/shows/v1/get_presigned_url
+    const request = { bucket: bucket, path: path}
+    return await fetch(`${blogBackendUrl}/api/v1/get_presigned_url`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
+        },
+        body: JSON.stringify(request),
+    }).then(response => response.json())
+}

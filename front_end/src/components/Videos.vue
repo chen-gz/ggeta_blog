@@ -3,10 +3,10 @@
 
 <!--    <s-card style="max-width: none; height: 600px">-->
     <a href="/shows/Fullmetal Alchemist - Brotherhood">
-        <img style="height: 600px" src="/src/assets/fmc.jpg" ></img>
+        <img style="height: 300px" src="/src/assets/fmc.jpg" ></img>
     </a>
-    <router-link to="/videoplay/" props:video_path="Fullmetal Alchemist - Brotherhood">
-            <h1>Fullmetal Alchemist - Brotherhood</h1>
+    <router-link to="/videoplay/movie/The Day After Tomorrow (2004)/The Day After Tomorrow (2004) Bluray-1080p AAC.mkv">
+        <img style="height: 300px" src="/src/assets/video_posters/the day after tomorrow.jpg" ></img>
     </router-link>
 <!--    </s-card>-->
 </template>

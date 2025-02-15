@@ -13,6 +13,7 @@ import Codeforces from './components/Codeforces.vue'
 import Pub from './components/Pub.vue'
 import ShowsList from './components/ShowsList.vue'
 import Videos from "./components/Videos.vue";
+import VideoPlay from "./components/VideoPlay.vue";
 // import 'sober'
 
 const routes = [
@@ -31,6 +32,7 @@ const routes = [
     {path: '/publications', name: 'Pub', component: Pub},
     {path: '/Shows/', name: 'Video', component: Videos},
     {path: '/Shows/:show_name', name: 'Shows', component: ShowsList, props:true},
+    {path: '/videoplay/:path(.*)*', name: 'VideoPlay', component: VideoPlay, props: true},
     {path: '/:pathMatch(.*)*', name: 'NotFound', component: Home},
 
 ];
