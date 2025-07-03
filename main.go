@@ -52,39 +52,6 @@ func ginServer() {
 	r.GET("/api/photo/v2/get_photo_list", func(c *gin.Context) {
 		hd.GetPhotoIdsV2(c, db_user, db_photo)
 	})
-
-	//r.GET("/api/photo/v2/get_photo_hash/:md5/:sha256", func(c *gin.Context) {
-	//	md5 := c.Param("md5")
-	//	sha256 := c.Param("sha256")
-	//	// check md5 and sha256 length is valid or not
-	//	if len(md5) != 32 || len(sha256) != 64 {
-	//		c.JSON(http.StatusBadRequest, gin.H{
-	//			"error": "invalid md5 or sha256",
-	//		})
-	//		return
-	//	}
-	//hd.GetPhotoHash(c, md5, sha256, db_user, db_photo, photo_minio_client)
-	//})
-	//r.GET("/api/photo/v2/get_photo_id/:id", func(c *gin.Context) {
-	//	idStr := c.Param("id")
-	//	id, err := strconv.Atoi(idStr)
-	//	if err != nil {
-	//		c.JSON(http.StatusBadRequest, gin.H{
-	//			"error": "invalid id",
-	//		})
-	//		return
-	//	}
-	//	hd.GetPhotoId(c, id, db_user, db_photo, photo_minio_client)
-	//})
-	//r.POST("/api/photo/v2/update_photo_meta", func(c *gin.Context) {
-	//	hd.UpdatePhotoMeta(c, db_user, db_photo)
-	//})
-	//r.POST("/api/photo/v2/insert_photo", func(c *gin.Context) {
-	//	hd.InsertPhotoV2(c, db_user, db_photo, photo_minio_client)
-	//})
-
-	///////////////////////////////////////////////////////////////////////////////////// video api
-
 	r.POST("/api/v4/login", func(c *gin.Context) {
 		hd.V4Login(c, db_user)
 	})
@@ -126,8 +93,6 @@ func ginServer() {
 		} else {
 			c.String(404, "File not found")
 		}
-		// frontend.ReadFile("front_end/dist/assets/" + c.Param("filepath"))
-		//print(err)
 	})
 	///////////////////////////////////////////////////////////////////////////////////// shows api
 	r.POST("/api/shows/v1/get_list", func(c *gin.Context) {
@@ -140,8 +105,6 @@ func ginServer() {
 		hd.GetPresignedUrlNew(c, minio_client, db_user)
 	})
 
-	// all other path will be redirected to index.html
-	//r.GET("/", func(c *gin.Context) {
 	r.NoRoute(func(c *gin.Context) {
 		c.FileFromFS("front_end/dist/", http.FS(frontend))
 	})
