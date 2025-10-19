@@ -28,25 +28,33 @@ type User struct {
 
 var userDbConfig UserDbConfig
 
-func UserDbInit(config UserDbConfig) (db_user *sql.DB, err error) {
+func SetUserDbConfig(config UserDbConfig) {
 	userDbConfig = config
+}
+
+func UserDbInit(config UserDbConfig) (db_user *sql.DB, err error) {
+	SetUserDbConfig(config)
 	log.Println("Initializing user database ...", userDbConfig)
 	sql_endpoint := fmt.Sprintf("%s:%s@%s/", userDbConfig.User, userDbConfig.Password, userDbConfig.Address)
 	db, err := sql.Open("mysql", sql_endpoint)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", userDbConfig.UserDatabase)
 	_, err = db.Exec(query)
+	if err != nil {
+		db.Close()
+		return nil, err
+	}
 	err = db.Close()
 	if err != nil {
-		log.Fatalln(err)
+		return nil, err
 	}
 
 	sql_endpoint = fmt.Sprintf("%s:%s@%s/%s", userDbConfig.User, userDbConfig.Password, userDbConfig.Address, userDbConfig.UserDatabase)
 	db_user, err = sql.Open("mysql", sql_endpoint)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	query = fmt.Sprintf(` CREATE TABLE IF NOT EXISTS %s (
     	id         INT UNSIGNED AUTO_INCREMENT,
@@ -61,7 +69,8 @@ func UserDbInit(config UserDbConfig) (db_user *sql.DB, err error) {
 	_, err = db_user.Exec(query)
 
 	if err != nil {
-		panic(err)
+		db_user.Close()
+		return nil, err
 	}
 	return db_user, nil
 }

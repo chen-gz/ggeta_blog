@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "@monaco-editor/loader": "^1.6.1",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "vite": "^7.1.10",
+    "vue-router": "^4.6.3"
+  },
+  "devDependencies": {
+    "sass-embedded": "^1.93.2"
+  }
+}
