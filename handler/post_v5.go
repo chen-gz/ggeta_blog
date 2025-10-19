@@ -3,7 +3,6 @@ package handler
 import (
 	"database/sql"
 	"github.com/gin-gonic/gin"
-	"go_blog/database"
 	renders "go_blog/render"
 	"net/http"
 )
@@ -33,8 +32,8 @@ func V5Render(c *gin.Context, dbUser *sql.DB) {
 		})
 		return
 	}
-	user := database.V3GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
-	if user.Email == "" {
+	_, ok := c.Get("user")
+	if !ok {
 		c.JSON(http.StatusUnauthorized, response{
 			Message: "invalid token",
 		})

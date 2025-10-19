@@ -78,9 +78,9 @@ func V4GetPost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 		})
 		return
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user, _ := c.Get("user")
 	// get post
-	postData, err := database.V4GetPostByUrlUser(db_post, postRequest.Url, user)
+	postData, err := database.V4GetPostByUrlUser(db_post, postRequest.Url, user.(database.User))
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{
 			"msg": "permission denied",
@@ -102,7 +102,7 @@ func V4SearchPosts(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 		Posts         []database.V4PostData `json:"posts"`
 		NumberOfPosts int                   `json:"number_of_posts"`
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user, _ := c.Get("user")
 	var searchParams SearchParams
 	if c.BindJSON(&searchParams) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -110,7 +110,7 @@ func V4SearchPosts(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 		})
 		return
 	}
-	posts, err := database.V4SearchPostUser(db_post, database.SearchParams(searchParams), user)
+	posts, err := database.V4SearchPostUser(db_post, database.SearchParams(searchParams), user.(database.User))
 	if err != nil {
 		c.JSON(http.StatusForbidden,
 			V4SearchPostsResponse{
@@ -137,7 +137,7 @@ func V4UpdatePost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 		Post    database.V4PostData `json:"post"`
 		Html    string              `json:"html"`
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user, _ := c.Get("user")
 	log.Println("V4UpdatePost: user: ", user)
 	var postUpdateRequest PostUpdateRequest
 	if c.BindJSON(&postUpdateRequest) != nil {
@@ -147,14 +147,14 @@ func V4UpdatePost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 		return
 	}
 	log.Println("V4UpdatePost: postUpdateRequest: ", postUpdateRequest)
-	err := database.V4UpdatePosByUser(db_post, database.V4PostData(postUpdateRequest), user)
+	err := database.V4UpdatePosByUser(db_post, database.V4PostData(postUpdateRequest), user.(database.User))
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{
 			"msg": "permission denied",
 		})
 		return
 	}
-	postData, err := database.V4GetPostByUrlUser(db_post, postUpdateRequest.Url, user)
+	postData, err := database.V4GetPostByUrlUser(db_post, postUpdateRequest.Url, user.(database.User))
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{
 			"msg": "permission denied",
@@ -175,8 +175,8 @@ func V4NewPost(c *gin.Context, dbUser *sql.DB, dbPost *sql.DB) {
 		Message string `json:"message"`
 		Url     string `json:"url"`
 	}
-	user := database.V3GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
-	url, err := database.V4NewPostUser(dbPost, user)
+	user, _ := c.Get("user")
+	url, err := database.V4NewPostUser(dbPost, user.(database.User))
 	if err != nil {
 		c.JSON(http.StatusForbidden, NewPostResponse{
 			Message: "permission denied",
@@ -200,7 +200,7 @@ func V4GetDistinct(c *gin.Context, dbUser *sql.DB, dbPost *sql.DB) {
 		Values  []string `json:"values"`
 		Length  int      `json:"length"`
 	}
-	user := database.V3GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
+	user, _ := c.Get("user")
 	var request GetDistinctRequest
 	if c.BindJSON(&request) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -209,7 +209,7 @@ func V4GetDistinct(c *gin.Context, dbUser *sql.DB, dbPost *sql.DB) {
 		return
 	}
 	print(request.Field)
-	values, err := database.V4GetDistinctUser(dbPost, request.Field, user)
+	values, err := database.V4GetDistinctUser(dbPost, request.Field, user.(database.User))
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{
 			"msg": "permission denied",

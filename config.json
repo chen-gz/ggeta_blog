@@ -13,8 +13,7 @@
         "user": "****",
         "password": "****",
         "user_database": "eta_user",
-        "user_table": "user",
-        "secrete_key": "****"
+        "user_table": "user"
     },
     "photo_database": {
         "address": "tcp(192.168.0.174:3306)",

@@ -1,6 +1,1 @@
-.DS_Store
-/posts/
-go_blog
-*.db
-*.bak
-.idea/
+node_modules
