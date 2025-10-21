@@ -207,7 +207,7 @@ func GetPhoto(c *gin.Context, db_user *sql.DB, db_photo *sql.DB, client *minio.C
 		JpegUrl string             `json:"jpeg_url"`
 		Message string             `json:"message"`
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, GetPhotoResponse{Message: "permission denied"})
 		return
@@ -259,7 +259,7 @@ func GetPhotoIds(c *gin.Context, db_user *sql.DB, db_photo *sql.DB) {
 		Ids     []int  `json:"ids"`
 		Message string `json:"message"`
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, GetPhotoIdsResponse{Message: "permission denied"})
 		return
@@ -280,7 +280,7 @@ func GetDeletedPhotoIds(c *gin.Context, db_user *sql.DB, db_photo *sql.DB) {
 		Ids     []int  `json:"ids"`
 		Message string `json:"message"`
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, GetDeletedPhotoIdsResponse{Message: "permission denied"})
 		return
@@ -343,7 +343,7 @@ func GetPhotoHash(c *gin.Context, md5 string, sha256 string, db_user *sql.DB, db
 		JpegUrl string               `json:"jpeg_url"`
 		Message string               `json:"message"`
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, GetPhotoResponse{Message: "permission denied"})
 		return
@@ -375,7 +375,7 @@ func GetPhotoId(c *gin.Context, id int, db_user *sql.DB, db_photo *sql.DB, clien
 		JpegUrl string               `json:"jpeg_url"`
 		Message string               `json:"message"`
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, GetPhotoResponse{Message: "permission denied"})
 		return
@@ -591,7 +591,7 @@ func InsertPhotoV2(c *gin.Context, dbUser *sql.DB, dbPhoto *sql.DB, client *mini
 
 // func (c *Context) BindJSON(obj any) error {
 func checkRequest(c *gin.Context, db_user *sql.DB, request any) (user database.User, ok bool) {
-	user = database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user = database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, gin.H{"error": "permission denied"})
 		return user, false
@@ -608,7 +608,7 @@ func GetPhotoIdsV2(c *gin.Context, userDb *sql.DB, photoDb *sql.DB) {
 		Ids     []int  `json:"ids"`
 		Message string `json:"message"`
 	}
-	user := database.V3GetUserByAuthHeader(userDb, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(userDb, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, GetPhotoIdsResponse{Message: "permission denied"})
 		return

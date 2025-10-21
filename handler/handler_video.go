@@ -27,7 +27,7 @@ func AddVideo(c *gin.Context, dbUser *sql.DB, dbVideo *sql.DB,
 		})
 		return
 	}
-	user := database.V3GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, response{Message: "permission denied"})
 		return
@@ -134,7 +134,7 @@ func GetVideoList(c *gin.Context, dbUser *sql.DB, dbVideo *sql.DB) {
 		Videos  []interfaces.VideoItem `json:"videos"`
 		Message string                 `json:"message"`
 	}
-	user := database.V3GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, response{Message: "permission denied"})
 		return
@@ -159,7 +159,7 @@ func GetVideo(c *gin.Context, dbUser *sql.DB, dbVideo *sql.DB, minioClient *mini
 		})
 		return
 	}
-	user := database.V3GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, response{Message: "permission denied"})
 		return
@@ -203,7 +203,7 @@ func GetVideoMeta(c *gin.Context, dbUser *sql.DB, dbVideo *sql.DB, minioClient *
 		})
 		return
 	}
-	user := database.V3GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(dbUser, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, response{Message: "permission denied"})
 		return
