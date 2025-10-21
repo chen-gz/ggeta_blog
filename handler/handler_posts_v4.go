@@ -94,41 +94,6 @@ func V4GetPost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 	c.JSON(http.StatusOK, response)
 }
 
-func V4SearchPosts(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
-	type SearchParams database.SearchParams
-	type V4SearchPostsResponse struct {
-		Status        string                `json:"status"`
-		Message       string                `json:"message"`
-		Posts         []database.V4PostData `json:"posts"`
-		NumberOfPosts int                   `json:"number_of_posts"`
-	}
-	user, _ := c.Get("user")
-	var searchParams SearchParams
-	if c.BindJSON(&searchParams) != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"msg": "invalid request",
-		})
-		return
-	}
-	posts, err := database.V4SearchPostUser(db_post, database.SearchParams(searchParams), user.(database.User))
-	if err != nil {
-		c.JSON(http.StatusForbidden,
-			V4SearchPostsResponse{
-				Status:        "failed",
-				Message:       "permission denied",
-				Posts:         []database.V4PostData{},
-				NumberOfPosts: 0,
-			})
-		return
-	}
-	c.JSON(http.StatusOK, V4SearchPostsResponse{
-		Status:        "success",
-		Message:       "ok",
-		Posts:         posts,
-		NumberOfPosts: len(posts),
-	})
-}
-
 func V4UpdatePost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 	type PostUpdateRequest database.V4PostData
 	type GetPostResponse struct {

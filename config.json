@@ -1,48 +1,11 @@
 {
     "blog_database": {
-        "address": "tcp(192.168.0.174:3306)",
-        "user": "****",
-        "password": "****",
-        "blog_database": "eta_blog",
-        "blog_table": "post",
-        "blog_user_table": "blog_users",
-        "blog_file_table": "blog_files"
+        "sqlite_path": "./blog.db"
     },
     "user_database": {
-        "address": "tcp(192.168.0.174:3306)",
-        "user": "****",
-        "password": "****",
-        "user_database": "eta_user",
-        "user_table": "user"
+        "sqlite_path": "./user.db"
     },
     "photo_database": {
-        "address": "tcp(192.168.0.174:3306)",
-        "user": "****",
-        "password": "****",
-        "photo_database": "eta_photo"
-    },
-    "minio": {
-        "endpoint": "minio.ggeta.com",
-        "access_key_id": "****",
-        "secrete_access_key": "****",
-        "bucket_name": "blog-public-data"
-    },
-    "photo_minio": {
-        "endpoint": "minio.ggeta.com",
-        "access_key_id": "****",
-        "secrete_access_key": "****",
-        "bucket_name": "photo"
-    },
-    "video_db": {
-        "address": "tcp(192.168.0.174:3306)",
-        "user": "****",
-        "password": "****",
-        "database_name": "eta_video"
-    },
-    "video_minio": {
-        "endpoint": "minio.ggeta.com",
-        "access_key_id": "****",
-        "secrete_access_key": "****",
-        "bucket_name": "video"
+        "sqlite_path": "./photo.db"
     }
 }

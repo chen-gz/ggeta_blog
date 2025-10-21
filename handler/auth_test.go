@@ -23,12 +23,9 @@ func TestAuthMiddleware(t *testing.T) {
 	defer db.Close()
 
 	database.SetUserDbConfig(database.UserDbConfig{
-		Address:      "localhost",
-		User:         "test",
-		Password:     "test",
-		UserDatabase: "test",
-		UserTable:    "test",
-		SecreteKey:   []byte("test"),
+		SqlitePath: ":memory:",
+		UserTable:  "test",
+		SecreteKey: []byte("test"),
 	})
 
 	// Create a new router
