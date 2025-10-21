@@ -11,7 +11,6 @@ import (
 
 type UserDbConfig struct {
 	SqlitePath string `json:"sqlite_path"`
-	UserTable  string `json:"user_table"`
 	SecreteKey []byte `json:"secrete_key"`
 }
 
@@ -53,7 +52,7 @@ func UserDbInit(config UserDbConfig) (db_user *sql.DB, err error) {
 }
 
 func UserAdd(db_user *sql.DB, user User, password string) error {
-	query := fmt.Sprintf("INSERT INTO %s (email, name, password) VALUES (?, ?, ?)", userDbConfig.UserTable)
+	query := "INSERT INTO user (email, name, password) VALUES (?, ?, ?)"
 	_, err := db_user.Exec(query, user.Email, user.Name, password)
 	return err
 }
@@ -62,7 +61,7 @@ func UserAdd(db_user *sql.DB, user User, password string) error {
 // If cannot find user, return empty user
 func GetUserByEmail(dbUser *sql.DB, email string) User {
 	var user User
-	query := fmt.Sprintf("SELECT id, email, name FROM %s WHERE email=?", userDbConfig.UserTable)
+	query := "SELECT id, email, name FROM user WHERE email=?"
 	err := dbUser.QueryRow(query, email).Scan(&user.Id, &user.Email, &user.Name)
 	if err != nil {
 		log.Println(err)
@@ -71,7 +70,7 @@ func GetUserByEmail(dbUser *sql.DB, email string) User {
 	return user
 }
 
-func V1VerifyToken(token string) (bool, string) {
+func VerifyToken(token string) (bool, string) {
 	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
@@ -87,18 +86,18 @@ func V1VerifyToken(token string) (bool, string) {
 	return valid, email
 }
 
-// V3GetUserByAuthHeader get user by auth header
+// GetUserByAuthHeader get user by auth header
 // if auth type is Bearer, get token and verify it
 // if auth type is Basic, return empty user
 // if auth header is invalid, return empty user
-func V3GetUserByAuthHeader(db_user *sql.DB, auth string) User {
+func GetUserByAuthHeader(db_user *sql.DB, auth string) User {
 	// if auth type is Bearer get token
 	if len(auth) < 7 {
 		return User{}
 	}
 	if auth[0:7] == "Bearer " {
 		token := auth[7:]
-		valid, email := V1VerifyToken(token)
+		valid, email := VerifyToken(token)
 		if !valid {
 			return User{}
 		} else {
@@ -108,18 +107,18 @@ func V3GetUserByAuthHeader(db_user *sql.DB, auth string) User {
 	return User{}
 }
 
-func V3Login(db_user *sql.DB, email string, password string) bool {
+func Login(db_user *sql.DB, email string, password string) bool {
 	// select rwo from users where email = email and password = password
-	query := fmt.Sprintf("SELECT email FROM %s WHERE email=? AND password=?", userDbConfig.UserTable)
+	query := "SELECT email FROM user WHERE email=? AND password=?"
 	err := db_user.QueryRow(query, email, password).Scan(&email)
 	if err != nil {
-		log.Println("V3Login: ", err)
+		log.Println("Login: ", err)
 		return false
 	}
 	return true
 }
 
-func V3GenerateToken(email string) string {
+func GenerateToken(email string) string {
 	log.Println("Generating token for user: ", email, " ...")
 	signingMethod := jwt.SigningMethodHS256 // HS256 is an instance of HMAC
 	claims := jwt.MapClaims{

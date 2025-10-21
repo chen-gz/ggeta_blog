@@ -1,4 +1,4 @@
-POST http://localhost:2009/api/v4/login
+POST http://localhost:2009/api/login
 Content-Type: application/json
 
 {

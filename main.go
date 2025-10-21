@@ -65,32 +65,32 @@ func ginServer() {
 	db_photo, _ := database.InitPhotoDb(config.PhotoDatabase)
 	// dbVideo := database.InitVideoDb(config.VideoDb)
 	database.InitPhotoTableV2(db_photo, database.User{Id: 2})
-	r.POST("/api/v4/login", func(c *gin.Context) {
-		hd.V4Login(c, db_user)
+	r.POST("/api/login", func(c *gin.Context) {
+		hd.Login(c, db_user)
 	})
-	r.POST("/api/v4/verify_token", func(c *gin.Context) {
-		hd.V4VerifyToken(c, db_user)
+	r.POST("/api/verify_token", func(c *gin.Context) {
+		hd.VerifyToken(c, db_user)
 	})
 
 	apiV1 := r.Group("/api")
 	apiV1.Use(hd.AuthMiddleware(db_user))
 	{
-		apiV1.GET("/photo/v2/get_photo_list", func(c *gin.Context) {
+		apiV1.GET("/photo/get_photo_list", func(c *gin.Context) {
 			hd.GetPhotoIdsV2(c, db_user, db_photo)
 		})
-		apiV1.POST("/v4/get_post", func(c *gin.Context) {
-			hd.V4GetPost(c, db_user, db_blog)
+		apiV1.POST("/post/get", func(c *gin.Context) {
+			hd.GetPost(c, db_user, db_blog)
 		})
-		apiV1.POST("/v4/update_post", func(c *gin.Context) {
-			hd.V4UpdatePost(c, db_user, db_blog)
+		apiV1.POST("/post/update", func(c *gin.Context) {
+			hd.UpdatePost(c, db_user, db_blog)
 		})
-		apiV1.POST("/v4/new_post", func(c *gin.Context) {
-			hd.V4NewPost(c, db_user, db_blog)
+		apiV1.POST("/post/new", func(c *gin.Context) {
+			hd.NewPost(c, db_user, db_blog)
 		})
-		apiV1.POST("/v4/get_distinct", func(c *gin.Context) {
-			hd.V4GetDistinct(c, db_user, db_blog)
+		apiV1.POST("/post/get_distinct", func(c *gin.Context) {
+			hd.GetDistinct(c, db_user, db_blog)
 		})
-		apiV1.POST("/post/v5/render", func(c *gin.Context) {
+		apiV1.POST("/post/render", func(c *gin.Context) {
 			hd.V5Render(c, db_user)
 		})
 	}

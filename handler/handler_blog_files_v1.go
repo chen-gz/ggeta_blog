@@ -39,7 +39,7 @@ func GetPresignedUrl(c *gin.Context, db_user *sql.DB, db_blog *sql.DB, client *m
 		Filename     string `json:"filename"` // the file name with be updated by the server
 		FileUrl      string `json:"file_url"` // the file url with be updated by the server
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	var uploadFileRequest UploadFileRequest
 	if c.BindJSON(&uploadFileRequest) != nil {
 		c.JSON(http.StatusBadRequest, UploadFileResponse{Message: "invalid request"})
@@ -83,7 +83,7 @@ func GetFileList(c *gin.Context, db_user *sql.DB, db_blog *sql.DB) {
 		FileUrl   []string `json:"file_url"` // the file url with be updated by the server
 		Message   string   `json:"message"`
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	// get id from parameter
 	id := c.Param("id")
 	// convert id from string to int

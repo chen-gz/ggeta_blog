@@ -19,7 +19,7 @@ func GetList(c *gin.Context, db_user *sql.DB, minioClient *minio.Client) {
 	type response struct {
 		Shows []string `json:"shows"`
 	}
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, response{Shows: []string{}})
 		return
@@ -46,7 +46,7 @@ func GetList(c *gin.Context, db_user *sql.DB, minioClient *minio.Client) {
 func GetShowPresignedUrl(c *gin.Context, minioClient *minio.Client, db_user *sql.DB) {
 	// verify user
 
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, gin.H{"error": "permission denied"})
 		return
@@ -76,7 +76,7 @@ func GetShowPresignedUrl(c *gin.Context, minioClient *minio.Client, db_user *sql
 
 func GetPresignedUrlNew(c *gin.Context, minioClient *minio.Client, db_user *sql.DB) {
 	// verify user
-	user := database.V3GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
+	user := database.GetUserByAuthHeader(db_user, c.Request.Header.Get("Authorization"))
 	if user.Id == 0 {
 		c.JSON(http.StatusForbidden, gin.H{"error": "permission denied"})
 		return

@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-func V4Login(c *gin.Context, db_user *sql.DB) {
+func Login(c *gin.Context, db_user *sql.DB) {
 	type structLogin struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -28,10 +28,10 @@ func V4Login(c *gin.Context, db_user *sql.DB) {
 		})
 		return
 	}
-	if database.V3Login(db_user, login.Email, login.Password) {
+	if database.Login(db_user, login.Email, login.Password) {
 		c.JSON(http.StatusOK, gin.H{
 			"msg":   "log in success",
-			"token": database.V3GenerateToken(login.Email),
+			"token": database.GenerateToken(login.Email),
 			"name":  database.GetUserByEmail(db_user, login.Email).Name,
 			"email": login.Email,
 		})
@@ -42,10 +42,10 @@ func V4Login(c *gin.Context, db_user *sql.DB) {
 	}
 }
 
-func V4VerifyToken(c *gin.Context, db_user *sql.DB) {
+func VerifyToken(c *gin.Context, db_user *sql.DB) {
 	// get auth header
 	auth := c.Request.Header.Get("Authorization")
-	user := database.V3GetUserByAuthHeader(db_user, auth)
+	user := database.GetUserByAuthHeader(db_user, auth)
 	if user.Email == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"msg": "invalid token",
@@ -58,7 +58,7 @@ func V4VerifyToken(c *gin.Context, db_user *sql.DB) {
 
 }
 
-func V4GetPost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
+func GetPost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 	type GetPostRequest struct {
 		Url      string `json:"url"`
 		Rendered bool   `json:"rendered"`
@@ -94,7 +94,7 @@ func V4GetPost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 	c.JSON(http.StatusOK, response)
 }
 
-func V4UpdatePost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
+func UpdatePost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 	type PostUpdateRequest database.V4PostData
 	type GetPostResponse struct {
 		Status  string              `json:"status"`
@@ -103,7 +103,7 @@ func V4UpdatePost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 		Html    string              `json:"html"`
 	}
 	user, _ := c.Get("user")
-	log.Println("V4UpdatePost: user: ", user)
+	log.Println("UpdatePost: user: ", user)
 	var postUpdateRequest PostUpdateRequest
 	if c.BindJSON(&postUpdateRequest) != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -111,7 +111,7 @@ func V4UpdatePost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 		})
 		return
 	}
-	log.Println("V4UpdatePost: postUpdateRequest: ", postUpdateRequest)
+	log.Println("UpdatePost: postUpdateRequest: ", postUpdateRequest)
 	err := database.V4UpdatePosByUser(db_post, database.V4PostData(postUpdateRequest), user.(database.User))
 	if err != nil {
 		c.JSON(http.StatusForbidden, gin.H{
@@ -134,7 +134,7 @@ func V4UpdatePost(c *gin.Context, db_user *sql.DB, db_post *sql.DB) {
 	})
 }
 
-func V4NewPost(c *gin.Context, dbUser *sql.DB, dbPost *sql.DB) {
+func NewPost(c *gin.Context, dbUser *sql.DB, dbPost *sql.DB) {
 	type NewPostResponse struct {
 		Status  string `json:"status"`
 		Message string `json:"message"`
@@ -155,7 +155,7 @@ func V4NewPost(c *gin.Context, dbUser *sql.DB, dbPost *sql.DB) {
 	})
 }
 
-func V4GetDistinct(c *gin.Context, dbUser *sql.DB, dbPost *sql.DB) {
+func GetDistinct(c *gin.Context, dbUser *sql.DB, dbPost *sql.DB) {
 	type GetDistinctRequest struct {
 		Field string `json:"field"`
 	}
