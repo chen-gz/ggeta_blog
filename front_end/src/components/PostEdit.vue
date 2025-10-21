@@ -1,31 +1,37 @@
 <script lang="ts" setup>
-import loader from "@monaco-editor/loader";
 import { useRouter } from "vue-router";
 import { getPostV4, savePost, UploadFile, V4PostData } from "/apiv4";
 import { onMounted, ref } from "vue";
+import { useEditor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
+import Placeholder from '@tiptap/extension-placeholder'
 
 let router = useRouter();
 let url = router.currentRoute.value.params.id as string;
 console.log(url);
 
 let post = ref({} as V4PostData);
+let editor_shows = ref("content");
+const editorWrapper = ref<HTMLDivElement | null>(null);
 
-let editor: any = null;
+const editor = useEditor({
+  content: '',
+  extensions: [
+    StarterKit,
+    Placeholder.configure({
+      placeholder: 'Write something …',
+    }),
+  ],
+})
+
 getPostV4(url, true).then((response) => {
     console.log(response);
     post.value = response.post;
-    loader.init().then((monaco) => {
-        editor = monaco.editor.create(document.getElementById("code_editor"), {
-            value: post.value.content,
-            language: "markdown",
-            theme: "one-light",
-            wrappingColumn: 80,
-            wordWrap: "on",
-            scrollBeyondLastLine: false,
-        });
-    });
+    if (editor.value) {
+      editor.value.commands.setContent(post.value.content);
+    }
 });
-let editor_shows = ref("content");
+
 document.addEventListener("keydown", function (e) {
     // control + 'S' to save or (command + 'S' on mac)
     if (
@@ -34,12 +40,19 @@ document.addEventListener("keydown", function (e) {
     ) {
         e.preventDefault();
         console.log("ctrl+s");
-        // save the post
-        if (editor) {
-            if (editor_shows.value === "meta")
-                post.value = JSON.parse(editor.getValue());
-            else post.value.content = editor.getValue();
+        if (!editor.value) return;
+
+        if (editor_shows.value === 'meta') {
+            try {
+                post.value = JSON.parse(editor.value.getText());
+            } catch (error) {
+                alert("Invalid JSON, cannot save.");
+                return;
+            }
+        } else {
+            post.value.content = editor.value.getHTML();
         }
+
         savePost(post.value).then(
           (response) => {
               if (response.status == "success") {
@@ -54,47 +67,57 @@ document.addEventListener("keydown", function (e) {
       // push to new url
         router.push("/post_edit/" + post.value.url);
     }
-    // control + 'E' to edit or (command + 'E' on mac)
-    // if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.key === 'e') {
-    // if (e.ctrlKey && e.key === "e") {
-    // change to f2
+    // F2 to toggle meta view
     if (e.key === "F2") {
         e.preventDefault();
-        console.log("ctrl+e");
-        // if editor is showing content, switch to meta
+        console.log("F2");
+        if (!editor.value) return;
+
         if (editor_shows.value === "content") {
             editor_shows.value = "meta";
-            editor.setValue(JSON.stringify(post.value, null, 4));
-            // disable word wrap and set language to json
-            editor.updateOptions({ wordWrap: "off", language: "json" });
+            // Update content from editor before switching
+            post.value.content = editor.value.getHTML();
+            editor.value.commands.setContent(JSON.stringify(post.value, null, 4));
+            // Tiptap doesn't have language modes, so we just show the text.
         } else {
             editor_shows.value = "content";
-            editor.setValue(post.value.content);
-            // editor.setModelLanguage(editor.getModel(), 'markdown')
-            // enable word wrap
-            editor.updateOptions({ wordWrap: "on", language: "markdown" });
+            try {
+                const updatedPost = JSON.parse(editor.value.getText());
+                post.value = updatedPost;
+                editor.value.commands.setContent(post.value.content);
+            } catch (error) {
+                alert("Invalid JSON, cannot switch back to content view.");
+            }
         }
     }
 });
-// monitor drop event on the editor (id: code_editor) after mount
 
 onMounted(() => {
-    document
-        .getElementById("code_editor")
-        .addEventListener("drop", function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            // get the file
+    if (editorWrapper.value) {
+      editorWrapper.value.addEventListener("drop", function (e: DragEvent) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (e.dataTransfer && e.dataTransfer.files.length > 0) {
             let file = e.dataTransfer.files[0];
             console.log(file);
-            // upload the file
             UploadFile(file, post.value.id);
-        });
+          }
+      });
+    }
 });
+
 </script>
 <template>
-    <div id="code_editor" style="height: 75vh;"></div>
+    <div ref="editorWrapper">
+      <editor-content :editor="editor" />
+    </div>
 </template>
 
-<style lang="sass" scoped>
+<style>
+.ProseMirror {
+  height: 75vh;
+  overflow-y: scroll;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
 </style>
