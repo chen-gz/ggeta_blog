@@ -19,27 +19,11 @@ type PhotoItem struct {
 	Category    string `json:"category"`
 }
 type PhotoDbConfig struct {
-	Address       string `json:"address"`
-	User          string `json:"user"`
-	Password      string `json:"password"`
-	PhotoDatabase string `json:"photo_database"`
+	SqlitePath string `json:"sqlite_path"`
 }
 
 func InitPhotoDb(config PhotoDbConfig) (db_photo *sql.DB, err error) {
-	sql_endpoint := fmt.Sprintf("%s:%s@%s/", config.User, config.Password, config.Address)
-	db, err := sql.Open("mysql", sql_endpoint)
-	if err != nil {
-		panic(err)
-	}
-	query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", config.PhotoDatabase)
-	_, err = db.Exec(query)
-	err = db.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	sql_endpoint = fmt.Sprintf("%s:%s@%s/%s", config.User, config.Password, config.Address, config.PhotoDatabase)
-	db_photo, err = sql.Open("mysql", sql_endpoint)
+	db_photo, err = sql.Open("sqlite3", config.SqlitePath)
 	if err != nil {
 		panic(err)
 	}
@@ -53,7 +37,7 @@ func initPhotoTable(photo_db *sql.DB, user User) error {
 	table_name := fmt.Sprintf("photo_%d", user.Id)
 
 	query := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
-    		id           INT UNSIGNED UNIQUE AUTO_INCREMENT,
+		id           INTEGER PRIMARY KEY AUTOINCREMENT,
     		hash         VARCHAR(255) UNIQUE NOT NULL,
     		has_original BOOLEAN NOT NULL DEFAULT FALSE,
 			original_ext VARCHAR(255) NOT NULL DEFAULT "",
@@ -61,8 +45,8 @@ func initPhotoTable(photo_db *sql.DB, user User) error {
     		tags         VARCHAR(2048) NOT NULL DEFAULT "",
     		category     VARCHAR(2048) NOT NULL DEFAULT "",
     		created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    		updated_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    		PRIMARY KEY (id))`, table_name)
+		updated_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+		)`, table_name)
 	_, err := photo_db.Exec(query)
 	return err
 }

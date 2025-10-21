@@ -12,10 +12,7 @@ import (
 )
 
 type BlogDbConfig struct {
-	Address       string `json:"address"`
-	User          string `json:"user"`
-	Password      string `json:"password"`
-	BlogDatabase  string `json:"blog_database"`
+	SqlitePath    string `json:"sqlite_path"`
 	BlogTable     string `json:"blog_table"`
 	BlogUserTable string `json:"blog_user_table"`
 	BlogFileTable string `json:"blog_file_table"`
@@ -52,20 +49,8 @@ type V4PostData struct {
 }
 
 func initializeV4Table(db_blog *sql.DB) {
-	// test post table exist in database or not
-	var value int
-	query := fmt.Sprintf(`SELECT 1 from information_schema.TABLES where TABLE_NAME='%s' and TABLE_SCHEMA='%s'`,
-		blogDbConfig.BlogTable, blogDbConfig.BlogDatabase)
-	err := db_blog.QueryRow(query).Scan(&value)
-	if err == nil && value == 1 {
-		// table exist. Do nothing
-		return
-	}
-	// create table post
-	// query = fmt.Sprintf(
-
-	query = fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
-						id INT UNSIGNED AUTO_INCREMENT,
+	query := `CREATE TABLE IF NOT EXISTS post (
+						id INTEGER PRIMARY KEY AUTOINCREMENT,
 						title VARCHAR(255) NOT NULL,
 						author VARCHAR(255) default '',
 						author_email VARCHAR(255) default '',
@@ -73,81 +58,41 @@ func initializeV4Table(db_blog *sql.DB) {
 						is_draft BOOLEAN DEFAULT FALSE,
 						is_deleted BOOLEAN DEFAULT FALSE,
 						content TEXT default '',
-						content_rendered TEXT default '',  -- this field should be markdown, html, json, latex, etc.
+						content_rendered TEXT default '',
 						summary TEXT default '',
 						tags VARCHAR(255) default '',
 						category VARCHAR(255) default '',
 						cover_image VARCHAR(255) default '',
 						created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-						updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-						view_groups SET('admin', 'editor', 'author', 'premium', 'subscriber', 'guest') NOT NULL DEFAULT 'admin,editor,author,premium,subscriber,guest',
-						edit_groups SET('admin', 'editor', 'author', 'premium', 'subscriber', 'guest') NOT NULL DEFAULT 'admin,editor,author',
-						PRIMARY KEY (id))`, blogDbConfig.BlogTable)
-
-	_, err = db_blog.Exec(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-	// if the index not exist, create it
-	query = fmt.Sprintf(`ALTER TABLE %s ADD FULLTEXT INDEX idx_content (content)`, blogDbConfig.BlogTable)
-	// _, err = db_blog.Exec(`ALTER TABLE post ADD FULLTEXT INDEX idx_content (content)`)
-	_, err = db_blog.Exec(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-	query = fmt.Sprintf(`ALTER TABLE %s ADD FULLTEXT INDEX idx_tags (tags)`, blogDbConfig.BlogTable)
-	_, err = db_blog.Exec(query)
-	if err != nil {
-		log.Fatal(err)
-	}
-	query = fmt.Sprintf(`ALTER TABLE %s ADD FULLTEXT INDEX idx_category (category)`, blogDbConfig.BlogTable)
-	_, err = db_blog.Exec(query)
+						updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+						view_groups TEXT NOT NULL DEFAULT 'admin,editor,author,premium,subscriber,guest',
+						edit_groups TEXT NOT NULL DEFAULT 'admin,editor,author'
+						)`
+	_, err := db_blog.Exec(query)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	query = fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
-    					id INT UNSIGNED AUTO_INCREMENT,
+	query = `CREATE TABLE IF NOT EXISTS blog_users (
+					id INTEGER PRIMARY KEY AUTOINCREMENT,
     					email VARCHAR(255) UNIQUE NOT NULL,
     					name VARCHAR(255),
-    					roles SET('admin', 'editor', 'author', 'premium', 'subscriber', 'guest') DEFAULT 'guest',
-    					created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-							PRIMARY KEY (id))`, blogDbConfig.BlogUserTable)
+					roles TEXT DEFAULT 'guest',
+					created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+						)`
 	_, err = db_blog.Exec(query)
 	if err != nil {
 		log.Fatal(err)
 	}
-	return
 }
 
-// InitV4 init database for v4
-// Create two tables: post and blog_users
-// The content of post refer to the structure of V4PostData
-// The content of blog_users refer to the structure of V4BlogUserData
-// return db_blog
 func InitV4(config BlogDbConfig) (db_blog *sql.DB) {
 	blogDbConfig = config
-	// connect to database
-	sql_endpoint := fmt.Sprintf("%s:%s@%s/", config.User, config.Password, config.Address)
-	db, err := sql.Open("mysql", sql_endpoint)
+	db_blog, err := sql.Open("sqlite3", config.SqlitePath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	_, err = db.Exec("CREATE DATABASE IF NOT EXISTS " + config.BlogDatabase)
-	if err != nil {
-		log.Fatal(err)
-	}
-	db.Close()
-	// connect to database eta_blog
-	//sql_endpoint = config.User + ":" + config.Password + config.Address + "/" + config.BlogDatabase
-	sql_endpoint = fmt.Sprintf("%s:%s@%s/%s", config.User, config.Password, config.Address, config.BlogDatabase)
-	db_blog, err = sql.Open("mysql", sql_endpoint)
 	initializeV4Table(db_blog)
-	err = initializeFileTable(db_blog)
-
-	if err != nil {
-		log.Fatal("initV4 error: ", err)
-	}
 	return db_blog
 }
 
@@ -246,12 +191,12 @@ func getPostById(db *sql.DB, id int) (V4PostData, error) {
 // The key of post id the "id"
 func updatePostById(db *sql.DB, post V4PostData) error {
 	query := fmt.Sprintf(`UPDATE %s SET title=?, author=?, author_email=?, url=?, is_draft=?, is_deleted=?, content=?,
-				  summary=?, tags=?, category=?, cover_image=?, view_groups=?, edit_groups=? WHERE id=?`, blogDbConfig.BlogTable)
+				  summary=?, tags=?, category=?, cover_image=?, view_groups=?, edit_groups=?, updated_at=? WHERE id=?`, blogDbConfig.BlogTable)
 	stmt, _ := db.Prepare(query)
 	viewGroups := strings.Join(post.ViewGroups.ToSlice(), ",")
 	editGroups := strings.Join(post.EditGroups.ToSlice(), ",")
 	_, err := stmt.Exec(post.Title, post.Author, post.AuthorEmail, post.Url, post.IsDraft, post.IsDeleted, post.Content,
-		post.Summary, post.Tags, post.Category, post.CoverImage, viewGroups, editGroups, post.Id)
+		post.Summary, post.Tags, post.Category, post.CoverImage, viewGroups, editGroups, time.Now(), post.Id)
 	if err != nil {
 		log.Println("updatePostById error: ", err, "post: ", post)
 		return err
@@ -299,102 +244,6 @@ func getUserRole(db *sql.DB, user User) (set.StringSet, error) {
 	return roles, nil
 }
 
-type SearchParams struct {
-	Author     string         `json:"author"`      // exact match
-	Title      string         `json:"title"`       // use like to search
-	Limit      map[string]int `json:"limit"`       // two values: start, size the number of post to return
-	Sort       string         `json:"sort"`        // directly apply to sql
-	Rendered   bool           `json:"rendered"`    // if true, rendered content will be returned, default false;
-	CountsOnly bool           `json:"counts_only"` // if true, only return the count of the result, default false;
-	Content    string         `json:"content"`     // use match to search
-	Tags       string         `json:"tags"`        // use match to search
-	Categories string         `json:"categories"`  // use match to search
-	IsDraft    bool           `json:"is_draft"`    // if true, only return the draft post, default false;
-	IsDeleted  bool           `json:"is_deleted"`  // if true, only return the deleted post, default false;
-}
-
-func searchPosts(db *sql.DB, params SearchParams, user User) ([]V4PostData, error) {
-	roles, _ := getUserRole(db, user)
-
-	//err := rows.Scan(&post.Id, &post.Title, &post.Author, &post.AuthorEmail, &post.Url,
-	//&post.IsDraft, &post.IsDeleted, &post.Content, &post.ContentRendered, &post.Summary, &post.Tags, &post.Category, &post.CoverImage,
-	//&created_at_str, &updated_at_str, &view_groups_str, &edit_groups_str)
-	stmt := fmt.Sprintf(`SELECT id, title, author, author_email, url, is_draft, is_deleted, summary,
-									  tags, category, cover_image, created_at, updated_at, view_groups, edit_groups from %s WHERE `, blogDbConfig.BlogTable)
-	for index, item := range roles.ToSlice() {
-		if index == 0 {
-			stmt += `(FIND_IN_SET("` + item + `", view_groups) `
-		} else if index < len(roles)-1 {
-			stmt += `OR FIND_IN_SET("` + item + `", view_groups) `
-		} else if index == len(roles)-1 {
-			stmt += `OR FIND_IN_SET("` + item + `", view_groups) `
-		}
-		if index == len(roles)-1 {
-			stmt += `)`
-		}
-	}
-	if params.Author != "" {
-		stmt += `AND author="` + params.Author + `"`
-	}
-	stmt += fmt.Sprintf(`AND is_draft=%t AND is_deleted=%t `, params.IsDraft, params.IsDeleted)
-
-	if params.Title != "" {
-		stmt += `AND title LIKE "%` + params.Title + `%" `
-	}
-	if params.Content != "" {
-		stmt += `AND MATCH (content) AGAINST ("` + params.Content + `") `
-	}
-	if params.Tags != "" {
-		//stmt += `AND MATCH (tags) AGAINST ("` + params.Tags + `") `
-		stmt += `AND tags="` + params.Tags + `"`
-	}
-	if params.Categories != "" {
-		stmt += `AND MATCH (category) AGAINST ("` + params.Categories + `") `
-	}
-	// add limit and sort
-	if params.Sort != "" {
-		stmt += `ORDER BY ` + params.Sort + ` `
-	}
-	// limit should have two values: start, size. if not, use default value
-	if params.Limit == nil {
-		params.Limit = make(map[string]int)
-	}
-	if params.Limit["start"] == 0 {
-		params.Limit["start"] = 0
-	}
-	if params.Limit["size"] == 0 {
-		params.Limit["size"] = 1000
-	}
-	stmt += `LIMIT ` + fmt.Sprintf("%d", params.Limit["start"]) + `,` + fmt.Sprintf("%d", params.Limit["size"])
-	// execute sql
-	rows, err := db.Query(stmt)
-	log.Println("searchPosts: ", stmt)
-	if err != nil {
-		log.Println("searchPosts error: ", err)
-		return []V4PostData{}, err
-	}
-	defer rows.Close()
-	var posts []V4PostData
-	for rows.Next() {
-		var post V4PostData
-		var created_at_str, updated_at_str string
-		var view_groups_str, edit_groups_str string
-		err := rows.Scan(&post.Id, &post.Title, &post.Author, &post.AuthorEmail, &post.Url,
-			&post.IsDraft, &post.IsDeleted /*&post.Content, &post.ContentRendered,*/, &post.Summary, &post.Tags, &post.Category, &post.CoverImage,
-			&created_at_str, &updated_at_str, &view_groups_str, &edit_groups_str)
-		post.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", created_at_str)
-		post.UpdatedAt, _ = time.Parse("2006-01-02 15:04:05", updated_at_str)
-		post.ViewGroups = set.CreateStringSet(strings.Split(view_groups_str, ",")...)
-		post.EditGroups = set.CreateStringSet(strings.Split(edit_groups_str, ",")...)
-		if err != nil {
-			log.Println("searchPosts error: ", err)
-			return []V4PostData{}, err
-		}
-		posts = append(posts, post)
-	}
-	return posts, nil
-
-}
 
 //////////////// following is public function ///////////////////////////////////////////////////
 
@@ -441,10 +290,6 @@ func V4GetPostByUrlUser(db *sql.DB, url string, user User) (V4PostData, error) {
 		return V4PostData{}, errors.New("permission denied")
 	}
 	return post, nil
-}
-
-func V4SearchPostUser(db *sql.DB, params SearchParams, user User) ([]V4PostData, error) {
-	return searchPosts(db, params, user) // the permission is checked in searchPosts
 }
 
 func V4NewPostUser(db *sql.DB, user User) (string, error) {

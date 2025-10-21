@@ -19,11 +19,11 @@ func initializeFileTable(db *sql.DB) error {
 
 	log.Println(blogDbConfig.BlogFileTable)
 	query := fmt.Sprintf(`CREATE TABLE IF NOT EXISTS %s (
-    		id         INT UNSIGNED UNIQUE AUTO_INCREMENT,
+		id         INTEGER PRIMARY KEY AUTOINCREMENT,
     		post_id    INT UNSIGNED NOT NULL,
     		file_name  VARCHAR(2048) NOT NULL,
-    		file_url   VARCHAR(2048) NOT NULL,
-    		key (post_id))`, blogDbConfig.BlogFileTable)
+		file_url   VARCHAR(2048) NOT NULL
+		)`, blogDbConfig.BlogFileTable)
 	_, err := db.Exec(query)
 	return err
 }

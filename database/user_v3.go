@@ -10,12 +10,9 @@ import (
 )
 
 type UserDbConfig struct {
-	Address      string `json:"address"`
-	User         string `json:"user"`
-	Password     string `json:"password"`
-	UserDatabase string `json:"user_database"`
-	UserTable    string `json:"user_table"`
-	SecreteKey   []byte `json:"secrete_key"`
+	SqlitePath string `json:"sqlite_path"`
+	UserTable  string `json:"user_table"`
+	SecreteKey []byte `json:"secrete_key"`
 }
 
 //var secreteKey = []byte("bcb967bec859b86e96564992792636bb442548af35a2e3374cee7a0f92542c18")
@@ -35,39 +32,19 @@ func SetUserDbConfig(config UserDbConfig) {
 func UserDbInit(config UserDbConfig) (db_user *sql.DB, err error) {
 	SetUserDbConfig(config)
 	log.Println("Initializing user database ...", userDbConfig)
-	sql_endpoint := fmt.Sprintf("%s:%s@%s/", userDbConfig.User, userDbConfig.Password, userDbConfig.Address)
-	db, err := sql.Open("mysql", sql_endpoint)
+	db_user, err = sql.Open("sqlite3", userDbConfig.SqlitePath)
 	if err != nil {
 		return nil, err
 	}
-	query := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", userDbConfig.UserDatabase)
-	_, err = db.Exec(query)
-	if err != nil {
-		db.Close()
-		return nil, err
-	}
-	err = db.Close()
-	if err != nil {
-		return nil, err
-	}
-
-	sql_endpoint = fmt.Sprintf("%s:%s@%s/%s", userDbConfig.User, userDbConfig.Password, userDbConfig.Address, userDbConfig.UserDatabase)
-	db_user, err = sql.Open("mysql", sql_endpoint)
-	if err != nil {
-		return nil, err
-	}
-	query = fmt.Sprintf(` CREATE TABLE IF NOT EXISTS %s (
-    	id         INT UNSIGNED AUTO_INCREMENT,
+	query := ` CREATE TABLE IF NOT EXISTS user (
+	id         INTEGER PRIMARY KEY AUTOINCREMENT,
     	email      VARCHAR(255) UNIQUE NOT NULL,
     	name       VARCHAR(255),
     	password   VARCHAR(255),
     	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    	PRIMARY KEY (id)
-		);`, userDbConfig.UserTable)
-
+	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+		);`
 	_, err = db_user.Exec(query)
-
 	if err != nil {
 		db_user.Close()
 		return nil, err
