@@ -16,6 +16,7 @@ type Config struct {
 	UserDatabase  database.UserDbConfig  `json:"user_database"`
 	PhotoDatabase database.PhotoDbConfig `json:"photo_database"`
 	VideoDb       interfaces.DbConfig    `json:"video_db"`
+	Minio         hd.MinioConfig         `json:"minio"`
 }
 
 // read config.json and return Config struct
@@ -92,6 +93,28 @@ func ginServer() {
 		})
 		apiV1.POST("/post/render", func(c *gin.Context) {
 			hd.V5Render(c, db_user)
+		})
+
+		minioClient := hd.InitMinioClient(config.Minio)
+
+		apiV1.POST("/v1/blog_file/get_presigned_url", func(c *gin.Context) {
+			hd.GetPresignedUrl(c, db_user, db_blog, minioClient)
+		})
+
+		apiV1.GET("/v1/blog_file/get_file_lists/:id", func(c *gin.Context) {
+			hd.GetFileList(c, db_user, db_blog)
+		})
+
+		apiV1.POST("/v1/shows/get_list", func(c *gin.Context) {
+			hd.GetList(c, db_user, minioClient)
+		})
+
+		apiV1.POST("/v1/shows/get_presigned_url", func(c *gin.Context) {
+			hd.GetShowPresignedUrl(c, minioClient, db_user)
+		})
+
+		apiV1.POST("/v1/get_presigned_url_new", func(c *gin.Context) {
+			hd.GetPresignedUrlNew(c, minioClient, db_user)
 		})
 	}
 	r.Run(":2009") // listen and serve on

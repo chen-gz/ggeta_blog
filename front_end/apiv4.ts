@@ -344,7 +344,7 @@ export interface RenderResponse {
     rendered: string
 }
 export async function getRenderedContent(content: string): Promise<string> {
-    return await fetch(`${blogBackendUrl}/api/v1/post/render`, {
+    return await fetch(`${blogBackendUrl}/api/post/render`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
