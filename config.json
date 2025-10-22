@@ -1,6 +1,9 @@
 {
     "blog_database": {
-        "sqlite_path": "./blog.db"
+        "sqlite_path": "./blog.db",
+        "blog_table": "post",
+        "blog_user_table": "blog_users",
+        "blog_file_table": "blog_files"
     },
     "user_database": {
         "sqlite_path": "./user.db"
