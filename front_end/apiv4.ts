@@ -43,7 +43,7 @@ export async function getPostV4(url: string, rendered: boolean): Promise<GetPost
         url: url,
         rendered: rendered
     }
-    return await fetch(`${blogBackendUrl}/api/v4/get_post`, {
+    return await fetch(`${blogBackendUrl}/api/post/get`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
@@ -62,7 +62,7 @@ export interface UpdatePostResponseV4 {
 
 export async function updatePostV4(request: V4PostData): Promise<UpdatePostResponseV4> {
     console.log(localStorage.getItem("token"))
-    return await fetch(`${blogBackendUrl}/api/v4/update_post`, {
+    return await fetch(`${blogBackendUrl}/api/post/update`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
@@ -105,7 +105,7 @@ export interface NewPostResponseV4 {
 }
 
 export async function newPostV4(): Promise<NewPostResponseV4> {
-    return await fetch(`${blogBackendUrl}/api/v4/new_post`, {
+    return await fetch(`${blogBackendUrl}/api/post/new`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
@@ -125,7 +125,7 @@ export interface GetDistinctRequest {
 }
 
 export async function getDistinct(col: string): Promise<GetDistinctResponse> {
-    return await fetch(`${blogBackendUrl}/api/v4/get_distinct`, {
+    return await fetch(`${blogBackendUrl}/api/post/get_distinct`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
@@ -183,7 +183,7 @@ export interface LoginResponse {
 }
 
 export async function loginV4(email: string, password: string) : Promise<boolean> {
-    return fetch(`${blogBackendUrl}/api/v4/login`, {
+    return fetch(`${blogBackendUrl}/api/login`, {
         method: "POST",
         body: JSON.stringify({
             email: email,
@@ -214,7 +214,7 @@ export async function loginV4(email: string, password: string) : Promise<boolean
 }
 
 export async function verifyToken(): Promise<LoginResponse> {
-    return await fetch(`${blogBackendUrl}/api/v4/verify_token`, {
+    return await fetch(`${blogBackendUrl}/api/verify_token`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
@@ -301,7 +301,7 @@ export async function UploadFile(file: File, post_id: number) {
         post_id: post_id,
         hash_crc32: hash.toString()
     }
-    fetch(`${blogBackendUrl}/api/blog_file/v1/get_presigned_url`, {
+    fetch(`${blogBackendUrl}/api/v1/blog_file/get_presigned_url`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
@@ -344,7 +344,7 @@ export interface RenderResponse {
     rendered: string
 }
 export async function getRenderedContent(content: string): Promise<string> {
-    return await fetch(`${blogBackendUrl}/api/post/v5/render`, {
+    return await fetch(`${blogBackendUrl}/api/v1/post/render`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
@@ -378,8 +378,8 @@ export interface GetFileListResponse  {
 
 // r.GET("/api/blog_file/v1/get_file_lists/:id", func(c *gin.Context) {
 export async function GetFileList(post_id: number): Promise<string[]> {
-    console.log(`${blogBackendUrl}/api/blog_file/v1/get_file_lists/${post_id}`)
-    return await fetch(`${blogBackendUrl}/api/blog_file/v1/get_file_lists/${post_id}`, {
+    console.log(`${blogBackendUrl}/api/v1/blog_file/get_file_lists/${post_id}`)
+    return await fetch(`${blogBackendUrl}/api/v1/blog_file/get_file_lists/${post_id}`, {
         method: "GET",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`,
@@ -412,7 +412,7 @@ export interface GetShowListResponse {
 }
 export async function ShowGetList(show: string): Promise<GetShowListResponse> {
     const request = {show_name: show}
-    return await fetch(`${blogBackendUrl}/api/shows/v1/get_list`, {
+    return await fetch(`${blogBackendUrl}/api/v1/shows/get_list`, {
         method: "POST",
         headers: {
             "Authorization": `Bearer ${localStorage.getItem("token") || ""}`
@@ -432,7 +432,7 @@ export async function ShowGetItems(path: string): Promise<GetShowItemsResponse> 
     // POST https://ggeta.com/api/shows/v1/get_presigned_url
 
     const request = { path: path}
-    return await fetch(`${blogBackendUrl}/api/shows/v1/get_presigned_url`, {
+    return await fetch(`${blogBackendUrl}/api/v1/shows/get_presigned_url`, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -445,7 +445,7 @@ export async function ShowGetItems(path: string): Promise<GetShowItemsResponse> 
 export async function GetPresignedUrl(bucket:string, path: string): Promise<GetPresignedUrlResponse> {
     // POST https://ggeta.com/api/shows/v1/get_presigned_url
     const request = { bucket: bucket, path: path}
-    return await fetch(`${blogBackendUrl}/api/v1/get_presigned_url`, {
+    return await fetch(`${blogBackendUrl}/api/v1/get_presigned_url_new`, {
         method: "POST",
         mode: "cors",
         headers: {
