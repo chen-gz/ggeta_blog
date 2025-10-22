@@ -5,9 +5,9 @@ import {useRouter} from "vue-router";
 // import CRC32 from "crc-32/crc32.js"
 // import router from "@/router";
 
-// const blogBackendUrl = "http://localhost:2009"
+const blogBackendUrl = "http://localhost:2009"
 
-const blogBackendUrl = "https://ggeta.com"
+// const blogBackendUrl = "https://ggeta.com"
 
 export let is_logined = ref(false)
 
