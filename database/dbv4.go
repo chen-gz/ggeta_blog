@@ -206,9 +206,13 @@ func updatePostById(db *sql.DB, post V4PostData) error {
 
 func v4InsertUser(db *sql.DB, user V4BlogUserData) error {
 	query := fmt.Sprintf(`INSERT INTO %s (email, name, roles) VALUES (?,?,?)`, blogDbConfig.BlogUserTable)
-	stmt, _ := db.Prepare(query)
+	stmt, err := db.Prepare(query)
+	if err != nil {
+		log.Println("v4InsertUser prepare error: ", err)
+		return err
+	}
 	roles := strings.Join(user.Roles.ToSlice(), ",")
-	_, err := stmt.Exec(user.Email, user.Name, roles)
+	_, err = stmt.Exec(user.Email, user.Name, roles)
 	if err != nil {
 		log.Println("v4InsertUser error: ", err)
 		return err

@@ -55,6 +55,7 @@ function performSearch() {
         <s-button type="text" @click="$router.push('/post/');"> Archives </s-button>
         <s-button type="text" @click="$router.push('/about');"> About </s-button>
         <s-button type="text" @click="$router.push('/login');"> Login </s-button>
+        <s-button type="text" @click="new_post"> New Post </s-button>
     </s-appbar>
     <div class="p-4">
         <!-- <home/> -->
